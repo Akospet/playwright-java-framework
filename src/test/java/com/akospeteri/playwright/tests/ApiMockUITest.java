@@ -23,6 +23,8 @@ class ApiMockDemoTest {
             BrowserContext context = browser.newContext();
             
             Page page = context.newPage();
+            page.onConsoleMessage(msg ->
+                    System.out.println("CONSOLE: " + msg.text()));
             String mockResponse = Files.readString(Paths.get("src/test/resources/mock/fruits.json"));
             
             page.route("**/api/fruits", route -> {
@@ -38,9 +40,9 @@ class ApiMockDemoTest {
             
             page.navigate(Paths.get("src/test/resources/demo/index.html")
                     .toUri().toString());
-            
+            page.waitForSelector("#fruits li");
             Locator fruits = page.locator("#fruits li");
-            
+            System.out.println(page.content());
             assertThat(fruits.count()).isEqualTo(3);
             assertThat(fruits.nth(0).textContent()).isEqualTo("Apple");
             assertThat(fruits.nth(1).textContent()).isEqualTo("Banana");
