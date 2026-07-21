@@ -14,7 +14,7 @@ class ApiMockTest {
             
             Browser browser = playwright.chromium().launch(
                     new BrowserType.LaunchOptions()
-                            .setHeadless(false));
+                            .setHeadless(true));
             
             BrowserContext context = browser.newContext();
             Page page = context.newPage();
