@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Playwright API Mock Demo</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        
+        li {
+            margin: 8px 0;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<h1>Fruit List</h1>
+<ul id="fruits"></ul>
+
+<script>
+
+    async function loadFruits() {
+
+        const response = await fetch("/api/fruits");
+        const fruits = await response.json();
+        const list = document.getElementById("fruits");
+
+        fruits.forEach(fruit => {
+            const li = document.createElement("li");
+            li.textContent = fruit.name;
+            list.appendChild(li);
+        });
+    }
+
+    loadFruits();
+
+</script>
+</body>
+</html>
