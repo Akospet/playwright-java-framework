@@ -4,8 +4,6 @@ import com.akospeteri.playwright.base.BaseTest;
 import com.akospeteri.playwright.visual.VisualComparator;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 class VisualRegressionTest extends BaseTest {
     
     @Test
