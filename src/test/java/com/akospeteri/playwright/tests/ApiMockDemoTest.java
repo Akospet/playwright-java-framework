@@ -1,5 +1,6 @@
 package com.akospeteri.playwright.tests;
 
+import com.akospeteri.playwright.server.EmbeddedTestServer;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +14,12 @@ class ApiMockDemoTest {
     @Test
     void shouldMockApiResponse() {
         
+        EmbeddedTestServer server = new EmbeddedTestServer();
+        
         try (Playwright playwright = Playwright.create()) {
-            
+
+            server.start();
+
             Browser browser =
                     playwright.chromium().launch(
                             new BrowserType.LaunchOptions()
@@ -27,19 +32,21 @@ class ApiMockDemoTest {
                     System.out.println("CONSOLE: " + msg.text()));
             String mockResponse = Files.readString(Paths.get("src/test/resources/mock/fruits.json"));
             
-            page.route("**/api/fruits", route -> {
+            page.route("**/*", route -> {
+                System.out.println(route.request().url());
                 
-                System.out.println(">>> API intercepted");
-                
-                route.fulfill(
-                        new Route.FulfillOptions()
-                                .setStatus(200)
-                                .setContentType("application/json")
-                                .setBody(mockResponse));
+                if (route.request().url().endsWith("/api/fruits")) {
+                    route.fulfill(
+                            new Route.FulfillOptions()
+                                    .setStatus(200)
+                                    .setContentType("application/json")
+                                    .setBody(mockResponse));
+                } else {
+                    route.resume();
+                }
             });
             
-            page.navigate(Paths.get("src/test/resources/demo/index.html")
-                    .toUri().toString());
+            page.navigate("http://localhost:8080/index.html");
             page.waitForSelector("#fruits li");
             Locator fruits = page.locator("#fruits li");
             System.out.println(page.content());
@@ -51,8 +58,8 @@ class ApiMockDemoTest {
             browser.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            server.stop();
         }
-        
     }
-    
 }
