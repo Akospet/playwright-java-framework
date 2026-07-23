@@ -3,11 +3,25 @@
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Playwright](https://img.shields.io/badge/Playwright-Latest-brightgreen)
 ![JUnit5](https://img.shields.io/badge/JUnit-5-orange)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-success)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 > Enterprise-grade UI Test Automation Framework built with **Java 21**, **Playwright**, **JUnit 5** and **GitHub Actions**.
 
-This project demonstrates modern enterprise test automation techniques including **Page Object Model**, **API Mocking**, **Network Interception**, **Trace Viewer**, **Screenshot on Failure**, **Video Recording** and **Continuous Integration**.
+This project demonstrates modern enterprise UI test automation architecture and best practices.
+
+The framework includes:
+
+- Enterprise Page Object Model (POM)
+- Thread-safe Playwright Factory
+- Persistent Authentication (Storage State)
+- Visual Regression Testing
+- API Mocking & Network Interception
+- Screenshot on Failure
+- Video Recording
+- Trace Viewer
+- Embedded HTTP Test Server
+- GitHub Actions CI/CD
 
 ---
 
@@ -31,7 +45,10 @@ This project demonstrates modern enterprise test automation techniques including
 - API Mocking
 - Network Interception
 - Embedded HTTP Test Server
-- Persistent authenticated browser sessions using Playwright Storage State
+- Persistent authenticated browser sessions (Playwright Storage State)
+- Visual Regression Testing
+- Automatic Baseline Image Creation
+- Difference Image Generation
 
 ## Continuous Integration
 
@@ -39,7 +56,9 @@ This project demonstrates modern enterprise test automation techniques including
 - Automated Playwright Browser Installation
 - Maven Build
 - Automatic Test Execution
-- Test Artifacts (Screenshots, Videos, Traces)
+- Screenshots
+- Videos
+- Trace Files
 
 ---
 
@@ -51,37 +70,109 @@ This project demonstrates modern enterprise test automation techniques including
 | Playwright | Latest |
 | JUnit | 5 |
 | AssertJ | Latest |
+| image-comparison | 4.4 |
 | Maven | Latest |
 | SLF4J + Logback | Latest |
 | GitHub Actions | CI/CD |
 
 ---
 
-# Architecture
+# Framework Architecture
 
+```text
+                       Tests
+                         │
+                         ▼
+                    BaseTest
+                         │
+                         ▼
+              Playwright Factory
+                         │
+          ┌──────────────┴──────────────┐
+          │                             │
+          ▼                             ▼
+   Browser Context               Storage State
+          │
+          ▼
+      Page Objects
+          │
+          ▼
+        Utilities
+          │
+ ┌────────┼──────────┬──────────────┬───────────────┐
+ ▼        ▼          ▼              ▼
+Video   Trace   Screenshot   Visual Comparator
 ```
-                Test
-                  │
-                  ▼
-          Playwright Factory
-                  │
-                  ▼
-            Browser Context
-                  │
-                  ▼
-             Page Objects
-                  │
-                  ▼
-              Application
+
+---
+
+# Storage State Authentication
+
+The framework supports **Playwright Storage State** to reuse authenticated browser sessions.
+
+Authentication is performed only once and persisted as:
+
+```text
+src/test/resources/auth/storageState.json
 ```
+
+Subsequent tests automatically reuse the authenticated browser context.
+
+Benefits:
+
+- Faster execution
+- Reduced login overhead
+- Enterprise-style authenticated testing
+
+---
+
+# Visual Regression Testing
+
+The framework supports automated visual regression testing using the **image-comparison** library.
+
+Features:
+
+- Automatic baseline creation
+- Pixel-by-pixel comparison
+- Difference image generation
+- CI-friendly output
+
+Project structure:
+
+```text
+src/test/resources/
+└── visual/
+    └── baseline/
+
+target/
+└── visual/
+    ├── actual/
+    └── diff/
+```
+
+Example:
+
+```java
+VisualComparator.compare(
+        page.locator(".inventory_list"),
+        "inventory-list");
+```
+
+When differences are detected the framework automatically generates:
+
+- Baseline Image
+- Actual Image
+- Difference Image
+
+and fails the test with detailed file locations.
 
 ---
 
 # API Mocking Demo
 
-The framework contains a small demo application running on an **embedded HTTP server**.
+The framework contains a lightweight demo application running on an **embedded HTTP server**.
 
-```
+```text
 Browser
       │
       ▼
@@ -103,7 +194,7 @@ DOM Rendering
 Assertions
 ```
 
-This allows the API Mocking example to run consistently on:
+This allows API mocking examples to run consistently on:
 
 - macOS
 - Windows
@@ -111,17 +202,15 @@ This allows the API Mocking example to run consistently on:
 - GitHub Actions
 - CI/CD environments
 
-without relying on external websites.
+without relying on external services.
 
 ---
 
 # Project Structure
 
-```
+```text
 src
 ├── main
-│   ├── java
-│   └── resources
 │
 └── test
     ├── java
@@ -130,11 +219,21 @@ src
     │   ├── listeners
     │   ├── pages
     │   ├── server
+    │   ├── utils
+    │   ├── visual
     │   └── tests
     │
     └── resources
+        ├── auth
         ├── demo
-        └── mock
+        ├── mock
+        └── visual
+            └── baseline
+
+target
+└── visual
+    ├── actual
+    └── diff
 ```
 
 ---
@@ -166,25 +265,30 @@ mvn clean test -Dheadless=true
 - Login Automation
 - Page Object Model
 - Browser Factory
+- Thread-safe Playwright Factory
+- Configuration Management
+- Storage State Authentication
+- Visual Regression Testing
+- Screenshot on Failure
+- Video Recording
+- Trace Viewer
 - API Mocking
 - Network Interception
 - Embedded HTTP Test Server
 - DOM Validation
-- Screenshot on Failure
-- Video Recording
-- Trace Viewer
-- GitHub Actions CI
+- GitHub Actions CI/CD
 
 ---
 
 # Roadmap
 
-- Storage State (Authenticated Sessions)
 - Parallel Execution
 - Cross Browser Matrix
 - Allure Reporting
 - Docker Execution
 - BrowserStack Integration
+- HTML Reporting
+- Visual Regression Artifacts in GitHub Actions
 
 ---
 
@@ -192,14 +296,33 @@ mvn clean test -Dheadless=true
 
 Compared to traditional browser automation frameworks, Playwright provides:
 
-- Automatic waiting
-- Built-in network interception
-- API mocking
+- Auto Waiting
+- Reliable Locators
+- Cross-browser support
+- Built-in Network Interception
+- API Mocking
 - Trace Viewer
-- Video recording
-- Modern browser support
-- Fast execution
-- Stable locators
+- Video Recording
+- Fast Execution
+- Stable Parallel Execution
+- Modern Browser Engine Support
+
+---
+
+# Enterprise Highlights
+
+This project demonstrates several enterprise-grade automation practices:
+
+- Clean layered architecture
+- Thread-safe browser management
+- Reusable Page Objects
+- Configuration management
+- Persistent authenticated sessions
+- Visual regression testing
+- API mocking
+- Automatic screenshots, videos and traces
+- CI/CD ready
+- Cross-platform execution (Windows, Linux, macOS)
 
 ---
 
@@ -209,4 +332,4 @@ Compared to traditional browser automation frameworks, Playwright provides:
 
 Senior Java Developer • Test Automation Engineer
 
-GitHub Portfolio Project
+Enterprise UI Test Automation • Java • Playwright • JUnit • CI/CD
