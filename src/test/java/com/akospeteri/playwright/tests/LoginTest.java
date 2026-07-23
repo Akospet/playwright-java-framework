@@ -24,7 +24,14 @@ class LoginTest extends BaseTest {
 
         loginPage.saveStorageState();
         InventoryPage inventoryPage = new InventoryPage(page);
-
+        page.context().cookies().forEach(cookie -> {
+            System.out.println("Name   : " + cookie.name);
+            System.out.println("Value  : " + cookie.value);
+            System.out.println("Domain : " + cookie.domain);
+            System.out.println("Path   : " + cookie.path);
+            System.out.println("Expires: " + cookie.expires);
+            System.out.println("----------------------------");
+        });
         assertThat(inventoryPage.isLoaded()).isTrue();
     }
 }
