@@ -1,6 +1,9 @@
 package com.akospeteri.playwright.pages;
 
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
+
+import java.nio.file.Paths;
 
 public class LoginPage {
     
@@ -30,4 +33,10 @@ public class LoginPage {
         clickLogin();
     }
     
+    public void saveStorageState() {
+        
+        page.context().storageState(
+                new BrowserContext.StorageStateOptions()
+                        .setPath(Paths.get("src/test/resources/auth/storageState.json")));
+    }
 }

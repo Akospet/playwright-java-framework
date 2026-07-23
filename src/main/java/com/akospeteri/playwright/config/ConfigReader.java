@@ -28,7 +28,8 @@ public class ConfigReader {
                 properties.getProperty("base.url"),
                 Browser.valueOf(properties.getProperty("browser").toUpperCase()),
                 Boolean.parseBoolean(properties.getProperty("headless")),
-                Integer.parseInt(properties.getProperty("slowmo"))
+                Integer.parseInt(properties.getProperty("slowmo")),
+                Boolean.parseBoolean(properties.getProperty("use.storage.state"))
         );
     }
     

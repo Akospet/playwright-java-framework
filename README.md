@@ -31,6 +31,7 @@ This project demonstrates modern enterprise test automation techniques including
 - API Mocking
 - Network Interception
 - Embedded HTTP Test Server
+- Persistent authenticated browser sessions using Playwright Storage State
 
 ## Continuous Integration
 

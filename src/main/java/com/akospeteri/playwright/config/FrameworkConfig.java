@@ -6,5 +6,27 @@ public record FrameworkConfig (
         String baseUrl,
         Browser browser,
         boolean headless,
-        int slowMo
-) {}
+        int slowMo,
+        boolean useStorageState
+) {
+    
+    public FrameworkConfig withoutStorageState() {
+        return new FrameworkConfig(
+                baseUrl,
+                browser,
+                headless,
+                slowMo,
+                false
+        );
+    }
+    
+    public FrameworkConfig withStorageState() {
+        return new FrameworkConfig(
+                baseUrl,
+                browser,
+                headless,
+                slowMo,
+                true
+        );
+    }
+}

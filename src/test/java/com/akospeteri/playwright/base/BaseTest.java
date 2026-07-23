@@ -18,19 +18,25 @@ public abstract class BaseTest {
     private static final Logger LOG = LoggerFactory.getLogger(BaseTest.class);
     protected Page page;
     protected String testName;
+    protected FrameworkConfig config;
+    
+    protected boolean useStorageState() {
+        return true;
+    }
     
     @BeforeEach
     void setup(TestInfo testInfo) {
-
+        
         testName = testInfo.getDisplayName();
-
+        
         LOG.info("========== START TEST ==========");
-        FrameworkConfig config = new ConfigReader().load();
-        PlaywrightFactory.create(config);
+        
+        config = new ConfigReader().load();
+        
+        PlaywrightFactory.create(config, useStorageState());
         PlaywrightFactory.setTestName(testName);
         
         page = PlaywrightFactory.page();
-        page.navigate(config.baseUrl());
     }
     
     @AfterEach

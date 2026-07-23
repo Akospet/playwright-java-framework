@@ -19,7 +19,9 @@ public class PlaywrightFactory {
     private static final ThreadLocal<Page> PAGE = new ThreadLocal<>();
     private static final ThreadLocal<String> TEST_NAME = new ThreadLocal<>();
     
-    public static void create(FrameworkConfig config) {
+    private static final Path STORAGE_STATE = Paths.get("src/test/resources/auth/storageState.json");
+
+    public static void create(FrameworkConfig config, boolean useStorageState) {
         
         LOG.info("Starting Playwright");
         
@@ -42,11 +44,17 @@ public class PlaywrightFactory {
                 .setHeadless(config.headless())
                 .setSlowMo(config.slowMo()));
         
-        BrowserContext context = browser.newContext(
-                new Browser.NewContextOptions()
-                        .setViewportSize(1920, 1080)
-                        .setRecordVideoDir(getVideoDir())
-                        .setRecordVideoSize(1920, 1080));
+        Browser.NewContextOptions options = new Browser.NewContextOptions()
+                .setViewportSize(1920, 1080)
+                .setRecordVideoDir(getVideoDir())
+                .setRecordVideoSize(1920, 1080);
+        
+        if (useStorageState && Files.exists(STORAGE_STATE)) {
+            LOG.info("Using Storage State");
+            options.setStorageStatePath(STORAGE_STATE);
+        }
+        
+        BrowserContext context = browser.newContext(options);
         
         context.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)

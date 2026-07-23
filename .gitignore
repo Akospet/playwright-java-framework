@@ -1,6 +1,7 @@
 playwright-report/
 test-results/
 target/
+src/test/resources/auth/storageState.json
 
 *.log
 
