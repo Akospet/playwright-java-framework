@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LoginTest extends BaseTest {
     
     @Override
-    protected boolean useStorageState() {
+    protected boolean requiresAuthentication() {
         return false;
     }
     

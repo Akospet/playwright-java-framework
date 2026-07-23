@@ -16,7 +16,13 @@ import java.nio.file.Paths;
 
 public class VisualComparator {
     
-    private static final Path BASELINE = Paths.get("src/test/resources/visual/baseline");
+    private static final Path BASELINE = Paths.get(
+            "src",
+            "test",
+            "resources",
+            "visual",
+            "baseline",
+            PlatformUtil.getPlatformFolder());
     private static final Path ACTUAL = Paths.get("target/visual/actual");
     private static final Path DIFF = Paths.get("target/visual/diff");
     
@@ -32,9 +38,7 @@ public class VisualComparator {
             Path actualImage = ACTUAL.resolve(imageName + ".png");
             Path diffImage = DIFF.resolve(imageName + "-diff.png");
             
-            locator.screenshot(
-                    new Locator.ScreenshotOptions()
-                            .setPath(actualImage));
+            locator.screenshot(new Locator.ScreenshotOptions().setPath(actualImage));
             
             if (!Files.exists(baselineImage)) {
                 Files.copy(actualImage, baselineImage);
@@ -86,9 +90,10 @@ public class VisualComparator {
                         diffImage.toAbsolutePath()
                 ));
             }
-            
+
             System.out.println("------------------------------------------");
             System.out.println("Visual comparison passed.");
+            System.out.println("Platform : " + PlatformUtil.getPlatformFolder());
             System.out.println("Baseline : " + baselineImage);
             System.out.println("Actual   : " + actualImage);
             System.out.println("------------------------------------------");

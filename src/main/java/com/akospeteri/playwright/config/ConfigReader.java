@@ -26,6 +26,8 @@ public class ConfigReader {
         
         return new FrameworkConfig(
                 properties.getProperty("base.url"),
+                properties.getProperty("username"),
+                properties.getProperty("password"),
                 Browser.valueOf(properties.getProperty("browser").toUpperCase()),
                 Boolean.parseBoolean(properties.getProperty("headless")),
                 Integer.parseInt(properties.getProperty("slowmo")),

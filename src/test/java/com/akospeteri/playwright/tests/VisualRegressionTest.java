@@ -10,9 +10,6 @@ class VisualRegressionTest extends BaseTest {
     void inventoryShouldMatchBaseline() {
         
         page.navigate(config.baseUrl() + "/inventory.html");
-        System.out.println("URL : " + page.url());
-        System.out.println(page.content());
         VisualComparator.compare(page.locator(".inventory_list"), "inventory-list");
-        
     }
 }

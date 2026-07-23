@@ -20,10 +20,10 @@ public abstract class BaseTest {
     protected String testName;
     protected FrameworkConfig config;
     
-    protected boolean useStorageState() {
+    protected boolean requiresAuthentication() {
         return true;
     }
-    
+
     @BeforeEach
     void setup(TestInfo testInfo) {
         
@@ -33,7 +33,7 @@ public abstract class BaseTest {
         
         config = new ConfigReader().load();
         
-        PlaywrightFactory.create(config, useStorageState());
+        PlaywrightFactory.create(config, requiresAuthentication());
         PlaywrightFactory.setTestName(testName);
         
         page = PlaywrightFactory.page();

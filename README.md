@@ -14,7 +14,7 @@ The framework includes:
 
 - Enterprise Page Object Model (POM)
 - Thread-safe Playwright Factory
-- Persistent Authentication (Storage State)
+- Self-Healing Authentication (Playwright Storage State)
 - Visual Regression Testing
 - API Mocking & Network Interception
 - Screenshot on Failure
@@ -45,7 +45,10 @@ The framework includes:
 - API Mocking
 - Network Interception
 - Embedded HTTP Test Server
-- Persistent authenticated browser sessions (Playwright Storage State)
+- Self-Healing Authentication (Playwright Storage State)
+- Automatic Storage State Creation
+- Automatic Storage State Validation
+- Automatic Session Recovery
 - Visual Regression Testing
 - Automatic Baseline Image Creation
 - Difference Image Generation
@@ -91,10 +94,10 @@ The framework includes:
           ┌──────────────┴──────────────┐
           │                             │
           ▼                             ▼
-   Browser Context               Storage State
-          │
-          ▼
-      Page Objects
+ Authentication Manager         Browser Context
+          │                             │
+          ▼                             ▼
+ Storage State Validation          Page Objects
           │
           ▼
         Utilities
@@ -106,23 +109,65 @@ Video   Trace   Screenshot   Visual Comparator
 
 ---
 
-# Storage State Authentication
+# Self-Healing Authentication
 
-The framework supports **Playwright Storage State** to reuse authenticated browser sessions.
+The framework provides **self-healing authentication** using Playwright Storage State.
 
-Authentication is performed only once and persisted as:
+Authenticated browser sessions are stored as:
 
 ```text
 src/test/resources/auth/storageState.json
 ```
 
-Subsequent tests automatically reuse the authenticated browser context.
+Before every authenticated test execution the framework automatically:
+
+- Checks whether a Storage State exists
+- Validates the stored authenticated session
+- Automatically recreates expired sessions
+- Continues test execution without manual intervention
+
+This removes the need to execute login tests before running authenticated UI tests.
 
 Benefits:
 
 - Faster execution
 - Reduced login overhead
-- Enterprise-style authenticated testing
+- Automatic session recovery
+- Self-healing authentication
+- Enterprise-grade session management
+
+---
+
+# Self-Healing Authentication Workflow
+
+```text
+Authenticated Test
+        │
+        ▼
+Storage State exists?
+        │
+   ┌────┴────┐
+   │         │
+  No        Yes
+   │         │
+   ▼         ▼
+Create   Validate Session
+Storage        │
+State          ▼
+           Session valid?
+             │
+        ┌────┴────┐
+        │         │
+       Yes       No
+        │         │
+        ▼         ▼
+ Run Test   Recreate Storage State
+                  │
+                  ▼
+               Run Test
+```
+
+This mechanism makes the framework resilient against expired browser sessions and removes manual authentication steps from the test execution process.
 
 ---
 
@@ -214,7 +259,9 @@ src
 │
 └── test
     ├── java
+    │   ├── auth
     │   ├── base
+    │   ├── config
     │   ├── factory
     │   ├── listeners
     │   ├── pages
@@ -231,6 +278,9 @@ src
             └── baseline
 
 target
+├── screenshots
+├── traces
+├── videos
 └── visual
     ├── actual
     └── diff
@@ -267,7 +317,9 @@ mvn clean test -Dheadless=true
 - Browser Factory
 - Thread-safe Playwright Factory
 - Configuration Management
-- Storage State Authentication
+- Self-Healing Authentication
+- Automatic Storage State Validation
+- Automatic Session Recovery
 - Visual Regression Testing
 - Screenshot on Failure
 - Video Recording
@@ -284,11 +336,10 @@ mvn clean test -Dheadless=true
 
 - Parallel Execution
 - Cross Browser Matrix
-- Allure Reporting
-- Docker Execution
 - BrowserStack Integration
+- Allure Reporting
 - HTML Reporting
-- Visual Regression Artifacts in GitHub Actions
+- Docker Execution
 
 ---
 
@@ -317,7 +368,8 @@ This project demonstrates several enterprise-grade automation practices:
 - Thread-safe browser management
 - Reusable Page Objects
 - Configuration management
-- Persistent authenticated sessions
+- Self-healing authenticated sessions
+- Automatic session validation and recovery
 - Visual regression testing
 - API mocking
 - Automatic screenshots, videos and traces
