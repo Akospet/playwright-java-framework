@@ -17,6 +17,7 @@ public class PlaywrightFactory {
     private static final ThreadLocal<Browser> BROWSER = new ThreadLocal<>();
     private static final ThreadLocal<BrowserContext> CONTEXT = new ThreadLocal<>();
     private static final ThreadLocal<Page> PAGE = new ThreadLocal<>();
+    private static final ThreadLocal<String> TEST_NAME = new ThreadLocal<>();
     
     public static void create(FrameworkConfig config) {
         
@@ -61,6 +62,10 @@ public class PlaywrightFactory {
         LOG.info("{} browser started", config.browser());
     }
     
+    public static void setTestName(String testName) {
+        TEST_NAME.set(testName);
+    }
+    
     private static Path getVideoDir() {
         return Paths.get("target/videos");
     }
@@ -73,23 +78,40 @@ public class PlaywrightFactory {
         
         LOG.info("Closing Playwright");
         
-        if (CONTEXT.get() != null) {
-            CONTEXT.get().tracing().stop(new Tracing.StopOptions()
-                    .setPath(java.nio.file.Paths.get("target/traces/trace.zip")));
-            CONTEXT.get().close();
+        try {
+            
+            if (CONTEXT.get() != null) {
+                
+                String traceName = TEST_NAME.get();
+                
+                if (traceName == null || traceName.isBlank()) {
+                    traceName = "trace";
+                }
+                
+                traceName = traceName.replaceAll("[^a-zA-Z0-9._-]", "_");
+                
+                CONTEXT.get().tracing().stop(
+                        new Tracing.StopOptions()
+                                .setPath(Paths.get("target/traces", traceName + ".zip")));
+                
+                CONTEXT.get().close();
+            }
+            
+            if (BROWSER.get() != null) {
+                BROWSER.get().close();
+            }
+            
+            if (PLAYWRIGHT.get() != null) {
+                PLAYWRIGHT.get().close();
+            }
+            
+        } finally {
+            
+            CONTEXT.remove();
+            BROWSER.remove();
+            PAGE.remove();
+            TEST_NAME.remove();
+            PLAYWRIGHT.remove();
         }
-        
-        if (BROWSER.get() != null) {
-            BROWSER.get().close();
-        }
-        
-        if (PLAYWRIGHT.get() != null) {
-            PLAYWRIGHT.get().close();
-        }
-        
-        CONTEXT.remove();
-        BROWSER.remove();
-        PAGE.remove();
-        PLAYWRIGHT.remove();
     }
 }

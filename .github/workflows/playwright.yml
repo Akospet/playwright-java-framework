@@ -36,7 +36,7 @@ jobs:
         run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 
       - name: Run Tests
-        run: mvn clean test
+        run: mvn clean test -Dheadless=true
 
       - name: Upload Screenshots
         if: always()

@@ -9,11 +9,15 @@ public class ScreenshotExtension implements AfterTestExecutionCallback {
     
     @Override
     public void afterTestExecution(ExtensionContext context) {
-        
         if (context.getExecutionException().isPresent()) {
-            ScreenshotUtil.capture(
-                    PlaywrightFactory.page(),
-                    context.getDisplayName());
+            System.out.println(">>> Taking screenshot for " + context.getDisplayName());
+            try {
+                ScreenshotUtil.capture(
+                        PlaywrightFactory.page(),
+                        context.getDisplayName());
+            } catch (Exception e) {
+                System.err.println("Failed to capture screenshot: " + e.getMessage());
+            }
         }
     }
 }

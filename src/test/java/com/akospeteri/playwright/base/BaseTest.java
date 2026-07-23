@@ -27,6 +27,7 @@ public abstract class BaseTest {
         LOG.info("========== START TEST ==========");
         FrameworkConfig config = new ConfigReader().load();
         PlaywrightFactory.create(config);
+        PlaywrightFactory.setTestName(testName);
         
         page = PlaywrightFactory.page();
         page.navigate(config.baseUrl());

@@ -1,34 +1,28 @@
 # Enterprise Playwright Test Automation Framework
 
-Enterprise-grade Playwright Test Automation Framework built with **Java 21**, **Playwright** and **JUnit 5**.
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Playwright](https://img.shields.io/badge/Playwright-Latest-brightgreen)
+![JUnit5](https://img.shields.io/badge/JUnit-5-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-This project demonstrates modern UI test automation techniques commonly used in enterprise environments, including Page Object Model, API Mocking, Network Interception, Trace Viewer, Screenshot & Video Recording.
+> Enterprise-grade UI Test Automation Framework built with **Java 21**, **Playwright**, **JUnit 5** and **GitHub Actions**.
 
----
-
-## Technology Stack
-
-- Java 21
-- Playwright
-- JUnit 5
-- AssertJ
-- Maven
-- SLF4J + Logback
-- GitHub Actions
+This project demonstrates modern enterprise test automation techniques including **Page Object Model**, **API Mocking**, **Network Interception**, **Trace Viewer**, **Screenshot on Failure**, **Video Recording** and **Continuous Integration**.
 
 ---
 
-## Features
+# Features
 
-### Core Framework
+## Enterprise Framework
 
 - Configuration Management
 - Browser Factory
 - Thread-safe Playwright Factory
 - Page Object Model (POM)
-- JUnit 5 Test Structure
+- JUnit 5 Test Architecture
+- Logging (SLF4J + Logback)
 
-### Test Automation
+## Test Automation
 
 - UI Testing
 - Screenshot on Failure
@@ -36,15 +30,61 @@ This project demonstrates modern UI test automation techniques commonly used in 
 - Trace Viewer
 - API Mocking
 - Network Interception
+- Embedded HTTP Test Server
 
-### Demo Application
+## Continuous Integration
 
-A small HTML demo application is included to demonstrate Playwright API interception without depending on external websites.
+- GitHub Actions
+- Automated Playwright Browser Installation
+- Maven Build
+- Automatic Test Execution
+- Test Artifacts (Screenshots, Videos, Traces)
 
-Workflow:
+---
+
+# Technology Stack
+
+| Technology | Version |
+|------------|---------|
+| Java | 21 |
+| Playwright | Latest |
+| JUnit | 5 |
+| AssertJ | Latest |
+| Maven | Latest |
+| SLF4J + Logback | Latest |
+| GitHub Actions | CI/CD |
+
+---
+
+# Architecture
 
 ```
-HTML Page
+                Test
+                  │
+                  ▼
+          Playwright Factory
+                  │
+                  ▼
+            Browser Context
+                  │
+                  ▼
+             Page Objects
+                  │
+                  ▼
+              Application
+```
+
+---
+
+# API Mocking Demo
+
+The framework contains a small demo application running on an **embedded HTTP server**.
+
+```
+Browser
+      │
+      ▼
+http://localhost/index.html
       │
       ▼
 fetch("/api/fruits")
@@ -62,9 +102,19 @@ DOM Rendering
 Assertions
 ```
 
+This allows the API Mocking example to run consistently on:
+
+- macOS
+- Windows
+- Linux
+- GitHub Actions
+- CI/CD environments
+
+without relying on external websites.
+
 ---
 
-## Project Structure
+# Project Structure
 
 ```
 src
@@ -75,8 +125,10 @@ src
 └── test
     ├── java
     │   ├── base
-    │   ├── pages
+    │   ├── factory
     │   ├── listeners
+    │   ├── pages
+    │   ├── server
     │   └── tests
     │
     └── resources
@@ -86,61 +138,71 @@ src
 
 ---
 
-## Running Tests
+# Running Tests
 
-Run all tests:
+Run all tests
 
 ```bash
 mvn clean test
 ```
 
-Run a single test:
+Run a single test
 
 ```bash
 mvn -Dtest=LoginTest test
 ```
 
+Run in headless mode
+
+```bash
+mvn clean test -Dheadless=true
+```
+
 ---
 
-## Current Demonstrations
+# Current Demonstrations
 
-- Login automation
+- Login Automation
 - Page Object Model
+- Browser Factory
 - API Mocking
 - Network Interception
-- DOM validation
-- Screenshot on failure
-- Video recording
+- Embedded HTTP Test Server
+- DOM Validation
+- Screenshot on Failure
+- Video Recording
 - Trace Viewer
+- GitHub Actions CI
 
 ---
 
-## Planned Improvements
+# Roadmap
 
 - Storage State (Authenticated Sessions)
 - Parallel Execution
 - Cross Browser Matrix
 - Allure Reporting
 - Docker Execution
-- CI Improvements
+- BrowserStack Integration
 
 ---
 
-## Why Playwright?
+# Why Playwright?
 
-Playwright provides powerful capabilities beyond traditional browser automation:
+Compared to traditional browser automation frameworks, Playwright provides:
 
-- Auto-waiting
-- Network interception
+- Automatic waiting
+- Built-in network interception
 - API mocking
 - Trace Viewer
 - Video recording
-- Cross-browser support
-- Fast and reliable execution
+- Modern browser support
+- Fast execution
+- Stable locators
 
 ---
 
-## Author
+# Author
 
 **Ákos Péteri**
 
